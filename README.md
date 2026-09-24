@@ -144,7 +144,7 @@ $table
     ->warp()
     ->warpHeight('70vh')          // scroll inside the table with a sticky header (default: scroll with the page)
     ->warpRowHeight(56)           // fixed row height in px (default: computed from the content, like the native table)
-    ->warpMeasureSampleSize(300)  // visible rows used to measure column widths (default: 300)
+    ->warpMeasureSampleSize(300)  // rows measured for column widths, plus the widest rows further down (default: 300)
     ->warpMultiLevel(columns: 6, rows: 2); // several lines per record (see "Multi-level rows")
 ```
 
