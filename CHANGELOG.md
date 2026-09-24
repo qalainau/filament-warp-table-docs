@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Grouping: collapsible groups, HTML group titles, descriptions and group selection.
 - Summaries: group subtotals, page summary and table summary. Summary rows hidden by application CSS
   are hidden in the canvas too.
+- Multi-level rows (`->warpMultiLevel()`): each record spans several lines on a grid, with a
+  multi-level header (`HeaderCell`). Columns are placed with `->warpCell()`.
 - `->recordClasses()`: background colors assigned to the classes by application CSS are drawn.
 - Native-table behavior parity:
   - Page scrolling by default; `->warpHeight()` for a fixed-height scroll area with a sticky header.

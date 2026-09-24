@@ -43,6 +43,7 @@ On a real order-management table (grouped by file, with group subtotals), the na
   - Browser find (Cmd/Ctrl+F) finds text in every row, including rows that are off screen.
 - **Grouping**: collapsible groups, HTML group titles, group descriptions and group selection.
 - **Summaries**: group subtotals, page summary and table summary, using Filament's summarizers.
+- **Multi-level rows**: show each record on several lines, ledger style, with a multi-level header.
 - **Inline editing**: text inputs and selects are edited in place, and toggles and checkboxes are toggled in place. Validation errors are shown inline, exactly as your column rules return them.
 - **Actions**: record actions, action groups (dropdowns), URL actions, modals and confirmations, all using Filament's own action pipeline.
 - **Theme aware**: colors, fonts and spacing are read from Filament's CSS at runtime, so custom themes and dark mode work without configuration.
@@ -143,10 +144,49 @@ $table
     ->warp()
     ->warpHeight('70vh')          // scroll inside the table with a sticky header (default: scroll with the page)
     ->warpRowHeight(56)           // fixed row height in px (default: computed from the content, like the native table)
-    ->warpMeasureSampleSize(300); // visible rows used to measure column widths (default: 300)
+    ->warpMeasureSampleSize(300)  // visible rows used to measure column widths (default: 300)
+    ->warpMultiLevel(columns: 6, rows: 2); // several lines per record (see "Multi-level rows")
 ```
 
 By default the table scrolls with the page, exactly like the native table. `warpHeight()` switches to a fixed-height scroll area with a sticky header row. This is useful for dashboards or very long pages.
+
+## Multi-level rows
+
+Wide records are easier to read when each record spans several lines, like a paper ledger. `warpMultiLevel()` lays the columns out on a grid: every record gets the same number of lines, and each column is placed on the grid with `warpCell()`.
+
+```php
+use Qalainau\FilamentWarpTable\MultiLevel\HeaderCell;
+
+$table
+    ->warp()
+    ->warpMultiLevel(columns: 6, rows: 2, header: [
+        HeaderCell::make('ID')->row(1)->col(1)->rowSpan(2)->column('id'),
+        HeaderCell::make('Product')->row(1)->col(2)->colSpan(3),
+        HeaderCell::make('Price')->row(2)->col(2)->column('price'),
+        // ...
+    ])
+    ->columns([
+        TextColumn::make('id')->sortable()->warpCell(row: 1, col: 1, rowSpan: 2),
+        TextColumn::make('sku')->warpCell(row: 1, col: 2),
+        TextColumn::make('name')->warpCell(row: 1, col: 3, colSpan: 2),
+        TextInputColumn::make('price')->sortable()->warpCell(row: 2, col: 2),
+        TextInputColumn::make('stock')->warpCell(row: 2),
+        // ...
+    ]);
+```
+
+- `warpCell(row, col, rowSpan, colSpan)` places a column (1-based). If you give only `row`, the column takes the first free place on that line. Columns without `warpCell()` fill the remaining free places line by line, like CSS Grid auto-placement. Extra lines are added when the grid is full.
+- `header` is optional. Without it, each column's label is shown at the column's position. A `HeaderCell` linked to a column with `->column('name')` sorts that column and shows its sort icon. `->alignment()` is supported.
+- `bordered: false` removes the lines between the columns of the grid. The lines between the lines of a record stay.
+- The selection checkbox and the record actions span the full height of the record.
+- `warpRowHeight()` sets the height of each line instead of the whole record.
+- Summaries are placed under their columns. Lines without any summary are left out of the summary row.
+- The column widths of the grid are computed from the content, the same way as in the regular layout.
+- Editing, links, selection, grouping and the keyboard work the same as in the regular layout. Tab moves through the cells in reading order (line by line).
+
+Multi-level rows are a Warp Table layout. When Warp Table is disabled or falls back to the native table (see *Automatic fallback*), the table is shown with one line per record. Placements set with the `row()` / `col()` / `rowSpan()` / `colSpan()` methods of `qalainau/filament-multi-level-rows` are read as well.
+
+![Multi-level rows](https://raw.githubusercontent.com/qalainau/filament-warp-table-docs/main/art/multi-level-rows.png)
 
 ## Supported columns
 
