@@ -2,7 +2,7 @@
 
 # Warp Table
 
-**Fast Filament tables for large pages: the rows are drawn on a `<canvas>`, while everything else behaves exactly like the native table.**
+**Fast Filament tables for large pages: the rows are drawn on a `<canvas>`, with optional ledger-style multi-level rows, while everything else behaves exactly like the native table.**
 
 Filament tables slow down once a page holds several hundred rows, and much more so when those rows contain inline-editable columns (`TextInputColumn`, `SelectColumn`, `ToggleColumn`, `CheckboxColumn`). Every cell becomes Blade output and Alpine components, and the browser has to build and lay out tens of thousands of DOM nodes.
 
@@ -184,7 +184,7 @@ $table
 - The column widths of the grid are computed from the content, the same way as in the regular layout.
 - Editing, links, selection, grouping and the keyboard work the same as in the regular layout. Tab moves through the cells in reading order (line by line).
 
-Multi-level rows are a Warp Table layout. When Warp Table is disabled or falls back to the native table (see *Automatic fallback*), the table is shown with one line per record. Placements set with the `row()` / `col()` / `rowSpan()` / `colSpan()` methods of `qalainau/filament-multi-level-rows` are read as well.
+Multi-level rows are a Warp Table layout. When Warp Table is disabled or falls back to the native table (see *Automatic fallback*), the table is shown with one line per record.
 
 ![Multi-level rows](https://raw.githubusercontent.com/qalainau/filament-warp-table-docs/main/art/multi-level-rows.png)
 
